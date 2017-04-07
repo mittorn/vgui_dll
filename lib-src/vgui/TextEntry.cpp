@@ -10,8 +10,26 @@
 #include "VGUI_App.h"
 #include "VGUI_ActionSignal.h"
 #include "VGUI_Font.h"
+#include "VGUI_FocusChangeSignal.h"
 
 using namespace vgui;
+
+namespace {
+class FooDefaultTextEntrySignal: public FocusChangeSignal
+{
+	TextEntry *_textEntry;
+	void focusChanged(bool lost, Panel *panel)
+	{
+		_textEntry->doSelectNone();
+		_textEntry->resetCursorBlink();
+	}
+public:
+	FooDefaultTextEntrySignal( TextEntry *textEntry )
+	{
+		_textEntry = textEntry;
+	}
+};
+}
 
 TextEntry::TextEntry(const char* text,int x,int y,int wide,int tall)
 {
@@ -26,7 +44,8 @@ TextEntry::TextEntry(const char* text,int x,int y,int wide,int tall)
 	setText(text,strlen(text));
 	doGotoEndOfLine();
 	addInputSignal(this);
-	addFocusChangeSignal(null);
+
+	addFocusChangeSignal(new FooDefaultTextEntrySignal(this));
 }
 
 void TextEntry::setText(const char* text,int textLen)

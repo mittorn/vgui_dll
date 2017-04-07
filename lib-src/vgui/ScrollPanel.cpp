@@ -90,7 +90,7 @@ void ScrollPanel::setSize(int wide,int tall)
 void ScrollPanel::setScrollBarVisible(bool horizontal,bool vertical)
 {
 	_horizontalScrollBar->setVisible(horizontal);
-	_verticalScrollBar->setVisible(horizontal);
+	_verticalScrollBar->setVisible(vertical);
 	validate();
 }
 

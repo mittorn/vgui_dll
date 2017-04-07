@@ -16,34 +16,34 @@ using namespace vgui;
 namespace{
 class FooDefaultScrollBarIntChangeSignal: public IntChangeSignal
 {
-    ScrollBar *_scrollBar;
+	ScrollBar *_scrollBar;
 public:
 
-    FooDefaultScrollBarIntChangeSignal( ScrollBar *scrollBar)
-    {
-        _scrollBar = scrollBar;
-    }
+	FooDefaultScrollBarIntChangeSignal( ScrollBar *scrollBar)
+	{
+		_scrollBar = scrollBar;
+	}
 
-    void intChanged(int value, Panel *panel)
-    {
-        _scrollBar->setValue( value );
-    }
+	void intChanged(int value, Panel *panel)
+	{
+		_scrollBar->setValue( value );
+	}
 };
 class FooDefaultButtonSignal: public ActionSignal
 {
-    ScrollBar *_scrollBar;
-    int _buttonIndex;
+	ScrollBar *_scrollBar;
+	int _buttonIndex;
 public:
-    FooDefaultButtonSignal( ScrollBar *scrollBar, int index)
-    {
-        _scrollBar = scrollBar;
-        _buttonIndex = index;
-    }
+	FooDefaultButtonSignal( ScrollBar *scrollBar, int index)
+	{
+		_scrollBar = scrollBar;
+		_buttonIndex = index;
+	}
 
-    void actionPerformed(Panel *panel)
-    {
-        _scrollBar->doButtonPressed(_buttonIndex);
-    }
+	void actionPerformed(Panel *panel)
+	{
+		_scrollBar->doButtonPressed(_buttonIndex);
+	}
 };
 }
 ScrollBar::ScrollBar(int x,int y,int wide,int tall,bool vertical) : Panel(x,y,wide,tall)
@@ -60,7 +60,7 @@ ScrollBar::ScrollBar(int x,int y,int wide,int tall,bool vertical) : Panel(x,y,wi
 	}
 	else
 	{
-        setSlider(new Slider(tall,0,wide-tall*2,tall,false));
+		setSlider(new Slider(tall,0,wide-tall*2,tall,false));
 		setButton(new Button("",0,0,tall+1,tall+1),0);
 		setButton(new Button("",0,wide-tall,tall+1,tall+1),1);
 	}
@@ -74,32 +74,32 @@ ScrollBar::ScrollBar(int x,int y,int wide,int tall,bool vertical) : Panel(x,y,wi
 
 void ScrollBar::setValue(int value)
 {
-    _slider->setValue( value );
+	_slider->setValue( value );
 }
 
 int ScrollBar::getValue()
 {
-    return _slider->getValue();
+	return _slider->getValue();
 }
 
 void ScrollBar::addIntChangeSignal(IntChangeSignal* s)
 {
-    _intChangeSignalDar.addElement(s);
+	_intChangeSignalDar.addElement(s);
 }
  
 void ScrollBar::setRange(int min,int max)
 {
-    _slider->setRange(min, max);
+	_slider->setRange(min, max);
 }
 
 void ScrollBar::setRangeWindow(int rangeWindow)
 {
-    _slider->setRangeWindow( rangeWindow );
+	_slider->setRangeWindow( rangeWindow );
 }
 
 void ScrollBar::setRangeWindowEnabled(bool state)
 {
-    _slider->setRangeWindowEnabled( state );
+	_slider->setRangeWindowEnabled( state );
 }
 
 void ScrollBar::setSize(int wide,int tall)
@@ -127,91 +127,93 @@ void ScrollBar::setSize(int wide,int tall)
 
 bool ScrollBar::isVertical()
 {
-    return _slider->isVertical();
+	return _slider->isVertical();
 }
 
 bool ScrollBar::hasFullRange()
 {
-    return _slider->hasFullRange();
+	return _slider->hasFullRange();
 }
 
 void ScrollBar::setButton(Button* button,int index)
 {
-    if( index >= 0 && index < 2 )
-    {
-        if( _button[index])
-            removeChild( _button[index]);
-        _button[index] = button;
-        addChild( button);
-        button->addActionSignal( new FooDefaultButtonSignal( this, index) );
-    }
+	if( index >= 0 && index < 2 )
+	{
+		if( _button[index])
+			removeChild( _button[index]);
+		_button[index] = button;
+		addChild( button);
+		button->addActionSignal( new FooDefaultButtonSignal( this, index) );
+		validate();
+	}
 }
 
 Button* ScrollBar::getButton(int index)
 {
-    if( index >= 0 && index < 2 )
-        return _button[index];
+	if( index >= 0 && index < 2 )
+		return _button[index];
 	return null;
 }
 
 void ScrollBar::setSlider(Slider* slider)
 {
-    if( _slider )
-        removeChild( _slider );
-    _slider = slider;
-    addChild( slider );
-    slider->addIntChangeSignal(new FooDefaultScrollBarIntChangeSignal( this ) );
+	if( _slider )
+		removeChild( _slider );
+	_slider = slider;
+	addChild( slider );
+	slider->addIntChangeSignal(new FooDefaultScrollBarIntChangeSignal( this ) );
+	validate();
 }
 
 Slider* ScrollBar::getSlider()
 {
-    return _slider;
+	return _slider;
 }
 
 void ScrollBar::doButtonPressed(int buttonIndex)
 {
-    if( buttonIndex )
-        setValue(getValue() + _buttonPressedScrollValue);
-    else
-        setValue(getValue() - _buttonPressedScrollValue);
+	if( buttonIndex )
+		setValue(getValue() + _buttonPressedScrollValue);
+	else
+		setValue(getValue() - _buttonPressedScrollValue);
 
 }
 
 void ScrollBar::setButtonPressedScrollValue(int value)
 {
-    _buttonPressedScrollValue = value;
+	_buttonPressedScrollValue = value;
 }
 
 void ScrollBar::validate()
 {
-    int wide, tall;
-    int rangeWindow;
-    if( _slider )
-    {
-        if( _button[0] && _button[0]->isVisible() )
-        {
-            if( _slider->isVertical() )
-                rangeWindow = _button[0]->getTall();
-            else
-                rangeWindow = _button[0]->getWide();
-        }
-        if( _button[1] && _button[1]->isVisible() )
-        {
-            if( _slider->isVertical() )
-                rangeWindow += _button[1]->getTall();
-            else
-                rangeWindow += _button[1]->getWide();
-        }
-        _slider->setRangeWindow( rangeWindow );
-    }
-    getSize(wide, tall);
-    setSize(wide,tall);
+	int wide, tall;
+	int rangeWindow;
+	if( _slider )
+	{
+		if( _button[0] && _button[0]->isVisible() )
+		{
+			if( _slider->isVertical() )
+				rangeWindow = _button[0]->getTall();
+			else
+				rangeWindow = _button[0]->getWide();
+		}
+		if( _button[1] && _button[1]->isVisible() )
+		{
+			if( _slider->isVertical() )
+				rangeWindow += _button[1]->getTall();
+			else
+				rangeWindow += _button[1]->getWide();
+		}
+		_slider->setRangeWindow( rangeWindow );
+	}
+	getSize(wide, tall);
+	setSize(wide,tall);
 }
 
 void ScrollBar::fireIntChangeSignal()
 {
-    for(int i=0;i<_intChangeSignalDar.getCount();i++)
-        _intChangeSignalDar[i]->intChanged(getValue(), this);
+	for(int i=0;i<_intChangeSignalDar.getCount();i++)
+		_intChangeSignalDar[i]->intChanged(getValue(), this);
 }
 
 void ScrollBar::performLayout()
