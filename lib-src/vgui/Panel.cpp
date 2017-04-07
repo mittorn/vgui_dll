@@ -1030,7 +1030,8 @@ void Panel::internalKeyTyped(KeyCode code)
 		return;
 
 	for(int i=0;i<_inputSignalDar.getCount();i++)
-		_inputSignalDar[i]->keyTyped(code,this);
+		if( _inputSignalDar[i] )
+			_inputSignalDar[i]->keyTyped(code,this);
 }
 
 void Panel::internalKeyReleased(KeyCode code)
@@ -1060,7 +1061,8 @@ void Panel::internalFocusChanged(bool lost)
 	}
 
 	for(int i=0;i<_focusChangeSignalDar.getCount();i++)
-		_focusChangeSignalDar[i]->focusChanged(lost,this);
+		if( _focusChangeSignalDar[i] )
+			_focusChangeSignalDar[i]->focusChanged(lost,this);
 }
 
 void Panel::internalSetCursor()
