@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "VGUI.h"
 #include <stdarg.h>
+#include <string.h>
 
 namespace vgui
 {
