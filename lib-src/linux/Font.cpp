@@ -14,6 +14,7 @@
 #include "vgui_linux.h"
 
 using namespace vgui;
+typedef unsigned char uint8;
 
 static int staticFontId=100;
 static Dar<BaseFontPlat*> staticFontPlatDar;
@@ -79,14 +80,14 @@ protected:
 		abc_t abc;
 	};
 	CUtlRBTree<abc_cache_t, unsigned short> m_ExtendedABCWidthsCache;
-	static bool ExtendedABCWidthsCacheLessFunc(const abc_cache_t &lhs, const abc_cache_t &rhs);
+	//static bool ExtendedABCWidthsCacheLessFunc(const abc_cache_t &lhs, const abc_cache_t &rhs);
 
 	int m_iScanLines;
 	int m_iBlur;
 	float *m_pGaussianDistribution;
 
 public:
-	FontPlat(const char* name,int tall,int wide,float rotation,int weight,bool italic,bool underline,bool strikeout,bool symbol) : m_ExtendedABCWidthsCache(256, 0, &ExtendedABCWidthsCacheLessFunc)
+	FontPlat(const char* name,int tall,int wide,float rotation,int weight,bool italic,bool underline,bool strikeout,bool symbol) : m_ExtendedABCWidthsCache(256, 0, &FontPlat::ExtendedABCWidthsCacheLessFunc)
 	{
 		m_bBitmapFont = false;
 
@@ -108,17 +109,17 @@ public:
 	{
 	}
 
-	bool ExtendedABCWidthsCacheLessFunc(const abc_cache_t &lhs, const abc_cache_t &rhs)
+	static bool ExtendedABCWidthsCacheLessFunc(const abc_cache_t &lhs, const abc_cache_t &rhs)
 	{
 		return lhs.wch < rhs.wch;
 	}
 
 	virtual bool equals(const char* name,int tall,int wide,float rotation,int weight,bool italic,bool underline,bool strikeout,bool symbol)
 	{
-		if (!stricmp(name, m_szName) 
+		if (!strcasecmp(name, m_szName) 
 			&& m_iTall == tall
 			&& m_iWeight == weight
-			&& m_bUnderline == underline)
+			&& m_bUnderlined == underline)
 			return true;
 
 		return false;
@@ -151,6 +152,7 @@ public:
 	{
 		return m_iHeight;
 	}
+
 	virtual void drawSetTextFont(SurfacePlat* plat)
 	{
 	}
@@ -322,6 +324,12 @@ int Font::getTall()
 {
 	return _plat->getTall();
 }
+
+int Font::getWide()
+{
+	return _plat->getWide();
+}
+
 
 namespace vgui
 {

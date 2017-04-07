@@ -8,6 +8,7 @@
 #include "VGUI.h"
 #include "VGUI_App.h"
 #include "VGUI_SurfaceBase.h"
+#include <time.h>>
 
 using namespace vgui;
 

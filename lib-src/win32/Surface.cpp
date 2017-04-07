@@ -5,6 +5,7 @@
 // $NoKeywords: $
 //=============================================================================
 
+#ifdef _WIN32
 #include <stdio.h>
 #include "VGUI.h"
 #include "VGUI_Surface.h"
@@ -16,10 +17,13 @@
 #include "VGUI_Bitmap.h"
 #include "VGUI_Font.h"
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define OEMRESOURCE
 #include <windows.h>
 #include <zmouse.h>
+#else
+#endif
 #include "vgui_win32.h"
 
 using namespace vgui;
@@ -28,7 +32,9 @@ class Texture
 {
 public:
 	int     _id;
+#ifdef _WIN32
 	HBITMAP _bitmap;
+#endif
 	int     _wide;
 	int     _tall;
 	void   *_dib;
@@ -767,3 +773,4 @@ bool Surface::isWithin(int x,int y)
 	POINT pnt={x,y};
 	return _plat->hwnd == WindowFromPoint(pnt);
 }
+#endif

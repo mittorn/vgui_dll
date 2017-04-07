@@ -5,12 +5,15 @@
 // $NoKeywords: $
 //=============================================================================
 
+#ifdef _WIN32
 #include "VGUI.h"
 #include "VGUI_Font.h"
 #include "VGUI_Dar.h"
 #include "fileimage.h"
 #include "vfontdata.h"
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include "vgui_win32.h"
 
 using namespace vgui;
@@ -382,3 +385,4 @@ void Font_Reset()
 	staticFontPlatDar.removeAll();
 }
 }
+#endif

@@ -10,6 +10,7 @@ namespace vgui
 class SurfacePlat
 {
 public:
+#ifdef _WIN32
 	HWND    hwnd;
 	HDC     hdc;
 	HDC     hwndDC;
@@ -17,6 +18,7 @@ public:
 	HGLRC   hglrc;
 	HRGN    clipRgn;
 	HBITMAP bitmap;
+#endif
 	int     bitmapSize[2];
 	int     restoreInfo[4];
 	bool    isFullscreen;

@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include "VGUI.h"
-#include <windows.h>
+#include <stdarg.h>
 
 namespace vgui
 {

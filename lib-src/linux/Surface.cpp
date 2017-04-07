@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "VGUI.h"
 #include "VGUI_Surface.h"
+#include "vgui_win32.h"
 #include "VGUI_Cursor.h"
 #include "VGUI_KeyCode.h"
 #include "VGUI_Panel.h"
