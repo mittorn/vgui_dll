@@ -1,6 +1,6 @@
 //========= Copyright ?1996-2002, Valve LLC, All rights reserved. ============
 //
-// Purpose: 
+// Purpose:
 //
 // $NoKeywords: $
 //=============================================================================
@@ -42,7 +42,7 @@ static Texture *staticGetTextureById(int id)
 			return staticTextureCurrent;
 		}
 	}
-	
+
 	for(int i=0;i<staticTextureCount;i++)
 	{
 		if(staticTexture[i]._id==id)
@@ -240,12 +240,30 @@ bool Surface::setFullscreenMode(int wide,int tall,int bpp)
 	{
 		getModeInfoCount();
 	}
+	if (!_plat->isFullscreen)
+	{
+		getPanel()->getBounds(_plat->restoreInfo[0], _plat->restoreInfo[1], _plat->restoreInfo[2], _plat->restoreInfo[3]);
+	}
+	getPanel()->setBounds(0,0,wide,tall);
+	applyChanges();
+	_plat->isFullscreen = true;
+	_plat->fullscreenInfo[0] = wide;
+	_plat->fullscreenInfo[1] = tall;
+	_plat->fullscreenInfo[2] = bpp;
+	getPanel()->repaint();
 
 	return false;
 }
 
 void Surface::setWindowedMode()
 {
+	if (_plat->isFullscreen)
+	{
+		getPanel()->setBounds(_plat->restoreInfo[0], _plat->restoreInfo[1], _plat->restoreInfo[2], _plat->restoreInfo[3]);
+		applyChanges();
+		_plat->isFullscreen = false;
+		getPanel()->repaint();
+	}
 }
 
 void Surface::drawSetTextPos(int x,int y)
@@ -258,4 +276,5 @@ void Surface::setAsTopMost(bool state)
 
 bool Surface::isWithin(int x,int y)
 {
+	return true;
 }

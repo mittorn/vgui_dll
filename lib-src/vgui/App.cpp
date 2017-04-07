@@ -286,8 +286,8 @@ void App::internalKeyPressed(KeyCode code,SurfaceBase* surfaceBase)
 	_keyDown[code]=true;
 	if(!_buildMode)
 	{
-		if(_mouseFocus)
-			_mouseFocus->internalKeyPressed(code);
+        if(_keyFocus)
+            _keyFocus->internalKeyPressed(code);
 	}
 }
 
@@ -299,8 +299,8 @@ void App::internalKeyTyped(KeyCode code,SurfaceBase* surfaceBase)
 	_keyTyped[code]=true;
 	if(!_buildMode)
 	{
-		if(_mouseFocus)
-			_mouseFocus->internalKeyTyped(code);
+        if(_keyFocus)
+            _keyFocus->internalKeyTyped(code);
 	}
 }
 
@@ -313,8 +313,8 @@ void App::internalKeyReleased(KeyCode code,SurfaceBase* surfaceBase)
 	_keyDown[code]=false;
 	if(!_buildMode)
 	{
-		if(_mouseFocus)
-			_mouseFocus->internalKeyReleased(code);
+        if(_keyFocus)
+            _keyFocus->internalKeyReleased(code);
 	}
 }
 
@@ -351,7 +351,7 @@ void App::init()
 		_keyDown[i]=false;
 		_keyReleased[i]=false;
 	}
-#if defined ( WIN32 )
+
 	_keyTrans[KEY_0]			="0)KEY_0";
 	_keyTrans[KEY_1]			="1!KEY_1";
 	_keyTrans[KEY_2]			="2@KEY_2";
@@ -455,7 +455,6 @@ void App::init()
 	_keyTrans[KEY_F10]			="\0\0KEY_F10";
 	_keyTrans[KEY_F11]			="\0\0KEY_F11";
 	_keyTrans[KEY_F12]			="\0\0KEY_F12";
-#endif
 }
 
 void App::updateMouseFocus(int x,int y,SurfaceBase* surfaceBase)
