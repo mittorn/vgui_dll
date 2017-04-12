@@ -135,7 +135,13 @@ Font* TextImage::getFont()
 {
 	if(!_font)
 	{
-		return App::getInstance()->getScheme()->getFont(_schemeFont);
+		App* pApp = App::getInstance();
+		if( pApp )
+		{
+			Scheme *pScheme = pApp->getScheme();
+			if( pScheme )
+				_font = pScheme->getFont(_schemeFont);
+		}
 	}
 	return _font;
 }
