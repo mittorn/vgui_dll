@@ -14,6 +14,9 @@
 static void*(*staticMalloc)(size_t size)=malloc;
 static void(*staticFree)(void* memblock)=free;
 
+#ifndef VGUI_NO_INTERNAL_NEW
+
+
 void *operator new(size_t size)
 {
 	return staticMalloc(size);
@@ -36,6 +39,8 @@ void operator delete [] (void *pMem)
 {
 	staticFree(pMem);
 }
+
+#endif
 
 void vgui_setMalloc(void *(*theMalloc)(size_t size) )
 {
