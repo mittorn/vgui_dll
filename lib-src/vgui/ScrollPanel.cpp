@@ -26,7 +26,73 @@ public:
 private:
 	ScrollPanel* _scrollPanel;
 };
+#ifdef VGUI_TOUCH_SCROLL
+#include "VGUI_InputSignal.h"
+class TouchScrollSignal: public InputSignal
+{
+	ScrollPanel *_panel;
+	bool _dragging;
+	int _lx, _ly, _ax, _ay;
+	bool _skip;
+public:
+	TouchScrollSignal(ScrollPanel *panel)
+	{
+		_panel = panel;
+	}
+	void cursorMoved(int x,int y,Panel* panel)
+	{
+		int dx = x - _lx, dy = y - _ly;
+		_lx = x, _ly = y;
+		if(_skip || dx > 50 || dy > 50 || dx < -50 || dy < -50) dx = dy = 0;
+		if(_dragging)
+		{
+			_ax -= dx, _ay -= dy;
+			_panel->setScrollValue(_ax,_ay);
+		}
+		_skip = false;
+	}
+	void cursorEntered(Panel* panel)
+	{
+	}
+	void cursorExited(Panel* panel)
+	{
+	}
+	void mousePressed(MouseCode code,Panel* panel)
+	{
+		if(code==MOUSE_LEFT)
+		{
+			_dragging=true;
+			_skip = true;
+			_panel->getScrollValue(_ax,_ay);
+		}
+	}
+	void mouseDoublePressed(MouseCode code,Panel* panel)
+	{
+	}
+	void mouseReleased(MouseCode code,Panel* panel)
+	{
+	}
+	void mouseWheeled(int delta,Panel* panel)
+	{
+	}
+	void keyPressed(KeyCode code,Panel* panel)
+	{
+	}
+	void keyTyped(KeyCode code,Panel* panel)
+	{
 
+	}
+	void keyReleased(KeyCode code,Panel* panel)
+	{
+	}
+	void keyFocusTicked(Panel* panel)
+	{
+	}
+	virtual void moved(int dx,int dy,bool internal,Panel* panel,Panel* parent)
+	{
+	}
+};
+#endif
 ScrollPanel::ScrollPanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 {
 	setPaintBorderEnabled(true);
@@ -38,13 +104,13 @@ ScrollPanel::ScrollPanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	_clientClip->setBgColor(Color(0,128,0,0));
 	_clientClip->setPaintBorderEnabled(true);
 	_clientClip->setPaintBackgroundEnabled(false);
-	_clientClip->setPaintEnabled(false);
+	_clientClip->setPaintEnabled(true);
 
 	_client=new Panel(0,0,wide*2,tall*2);
 	_client->setParent(this);
 	_client->setPaintBorderEnabled(true);
 	_client->setPaintBackgroundEnabled(false);
-	_client->setPaintEnabled(false);
+	_client->setPaintEnabled(true);
 
 	_horizontalScrollBar=new ScrollBar(0,tall-16,wide-16,16,false);
 	_horizontalScrollBar->setParent(this);
@@ -55,7 +121,14 @@ ScrollPanel::ScrollPanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	_verticalScrollBar->setParent(this);
 	_verticalScrollBar->addIntChangeSignal(new ChangeHandler(this));
 	_verticalScrollBar->setVisible(false);
-
+#ifdef VGUI_TOUCH_SCROLL
+	Panel *touchScrollPanel = new Panel(0,0,wide-16,tall-16);
+	touchScrollPanel->setParent(this);
+	touchScrollPanel->setPaintBorderEnabled(true);
+	touchScrollPanel->setPaintBackgroundEnabled(false);
+	touchScrollPanel->setPaintEnabled(true);
+	touchScrollPanel->addInputSignal(new TouchScrollSignal(this));
+#endif
 	_autoVisible[0]=true;
 	_autoVisible[1]=true;
 	validate();
@@ -113,8 +186,13 @@ Panel* ScrollPanel::getClientClip()
 
 void ScrollPanel::setScrollValue(int horizontal,int vertical)
 {
+	/*_horizontalScrollBar->setRange(0,10);//_client->getWide()-_clientClip->getWide());
+	_horizontalScrollBar->setRangeWindow(10000);//_client->getWide());
+
+	_verticalScrollBar->setRange(0,10);//_client->getTall()-_clientClip->getTall());
+	_verticalScrollBar->setRangeWindow(10000);//_client->getTall());*/
 	_horizontalScrollBar->setValue(horizontal);
-	_verticalScrollBar->setValue(horizontal);
+	_verticalScrollBar->setValue(vertical);
 	recomputeScroll();
 }
 
@@ -174,6 +252,7 @@ void ScrollPanel::validate()
 	setSize(wide,tall);
 	setSize(wide,tall);
 	setSize(wide,tall);
+	//recomputeScroll();
 }
 
 void ScrollPanel::recomputeScroll()
